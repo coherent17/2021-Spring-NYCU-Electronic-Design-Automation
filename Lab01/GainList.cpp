@@ -12,9 +12,9 @@ vector <bool> init_partition(int nodeNumber, int *leftPartitionCellCount, int *r
 	*leftPartitionCellCount = 0;
 	*rightPartitionCellCount = 0;
 	for(int i = 1; i <=nodeNumber; i++){
-		if((i % 2 + 1) % 2 == 0) (*leftPartitionCellCount)++ ;
+		if(i % 2 == 0) (*leftPartitionCellCount)++ ;
 		else (*rightPartitionCellCount)++;
-		partition[i] = (i % 2 + 1) % 2;
+		partition[i] = i % 2;
 	}
 	return partition;
 }
@@ -30,7 +30,6 @@ void printPartition(vector <bool> &partition, int nodeNumber, int leftPartitionC
 	printf("leftPartitionCellCount = %d, rightPartitionCellCount = %d\n", leftPartitionCellCount, rightPartitionCellCount);
 }
 
-//outer loop
 int FS(vector<unordered_set<int>> &netArray, vector<unordered_set<int>> &cellArray, vector <bool> &partition, int targetCell, int netNumber, int nodeNumber){
 	int result = 0;
 	int nums_net_cell_on_oneside = 0;
@@ -97,10 +96,10 @@ void BuildGainList(vector <int> &gain, int max_terminal, vector<unordered_set<in
 }
 
 void printGainList(vector <unordered_set<int>> GainList, int max_terminal){
-	printf("max_terminal = %d \n", max_terminal);
+	//printf("max_terminal = %d \n", max_terminal);
 	int i = 2 * max_terminal;
 	while(i >= 0){
-		printf("Gain = %d :", i - max_terminal);
+		printf("Gain = %d\t:", i - max_terminal);
 		for(const auto &t : GainList[i]){
 			printf("%d ", t);
 		}
