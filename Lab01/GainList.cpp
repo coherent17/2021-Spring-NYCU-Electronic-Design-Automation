@@ -35,7 +35,6 @@ int FS(vector<unordered_set<int>> &netArray, vector<unordered_set<int>> &cellArr
 	int nums_net_cell_on_oneside = 0;
 	for(const auto &i : cellArray[targetCell]){
 		if(netArray[i].count(targetCell)){
-			//why???????????????????????
 			nums_net_cell_on_oneside = 1;
 			for(const auto &s : netArray[i]){
 				if(netArray[i].count(s) && s!= targetCell){
@@ -56,7 +55,6 @@ int TE(vector<unordered_set<int>> &netArray, vector<unordered_set<int>> &cellArr
 	int nums_net_cell_on_oneside = 0;
 	for(const auto &i : cellArray[targetCell]){
 		if(netArray[i].count(targetCell)){
-			//why???????????????????????
 			nums_net_cell_on_oneside = 1;
 			for(const auto &s : netArray[i]){
 				if(netArray[i].count(s) && s!= targetCell){
@@ -89,14 +87,12 @@ void printGain(vector <int> &gain, int nodeNumber){
 
 void BuildGainList(vector <int> &gain, int max_terminal, vector<unordered_set<int>> &leftGainList, vector<unordered_set<int>> &rightGainList, vector <bool> &partition){
 	for(int i = 1; i < (int)gain.size(); i++){
-		//printf("%d insert at gain = %d list, index = %d\n", i, gain[i], gain[i] + max_terminal);
 		if(partition[i] == false) leftGainList[gain[i] + max_terminal].insert(i);
 		else if(partition[i] == true) rightGainList[gain[i] + max_terminal].insert(i);
 	}
 }
 
 void printGainList(vector <unordered_set<int>> GainList, int max_terminal){
-	//printf("max_terminal = %d \n", max_terminal);
 	int i = 2 * max_terminal;
 	while(i >= 0){
 		printf("Gain = %d\t:", i - max_terminal);
