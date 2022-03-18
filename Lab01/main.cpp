@@ -8,6 +8,8 @@ using namespace std;
 using std::vector;
 using std::unordered_set;
 
+typedef struct vector<unordered_set<int>> vu;
+
 int main(int argc, char *argv[]){
 	char *input_filename = *(argv + 1);
 
@@ -27,8 +29,6 @@ int main(int argc, char *argv[]){
 
 	vector <bool> CellLockState;									//the array to store whether the cell is locked or not
 
-	bool comeFrom;
-
 	netArray = BuildNetArray(input_filename, &netNumber, &nodeNumber);
 	cellArray = BuildCellArray(input_filename, &max_terminal);
 
@@ -38,18 +38,54 @@ int main(int argc, char *argv[]){
 	//printCellArray(cellArray);
 
 	partition =  init_partition(nodeNumber, &leftPartitionCellCount, &rightPartitionCellCount);
-	printPartition(partition, nodeNumber, leftPartitionCellCount, rightPartitionCellCount);
+	//printPartition(partition, nodeNumber, leftPartitionCellCount, rightPartitionCellCount);
 	gain = calculate_all_gain(netArray, cellArray, partition, netNumber, nodeNumber);
-	printGain(gain, nodeNumber);
+	//printGain(gain, nodeNumber);
 
 	BuildGainList(gain, max_terminal, LeftGainList, RightGainList, partition);
-	printGainList(LeftGainList, max_terminal);
-	printGainList(RightGainList, max_terminal);
+	//printGainList(LeftGainList, max_terminal);
+	//printGainList(RightGainList, max_terminal);
 
 	CellLockState = BuildCellLockState(nodeNumber);
-	//printCellLockState(CellLockState);
 
-	int cell = getMaxGainCell(LeftGainList, RightGainList, &comeFrom, max_terminal, leftPartitionCellCount, rightPartitionCellCount);
-	printf("cell %d, come from %d\n", cell, comeFrom);
+
+	printf("------------------------testing---------------------\n");
+	int move_cell_id;
+	bool comeFrom;
+
+	int totalGain = 0;
+	int currentMaxGain = 0;
+	vector <bool> best_partition;
+	best_partition.assign(partition.begin(), partition.end());
+
+	for(int i = 1; i <= nodeNumber; i++){
+		move_cell_id = getMaxGainCell(LeftGainList, RightGainList, &comeFrom, max_terminal, leftPartitionCellCount, rightPartitionCellCount);
+		totalGain += gain[move_cell_id];
+		//printf("choose cell %d to move\n", move_cell_id);
+		//printf("remove %d from bucketlist\n", move_cell_id);
+		removeFromBucketList(move_cell_id, comeFrom, LeftGainList, RightGainList, gain, max_terminal);
+		updateLockState(move_cell_id, CellLockState);
+		updatePartition(move_cell_id, partition, &leftPartitionCellCount, &rightPartitionCellCount, comeFrom);
+		//printPartition(partition, nodeNumber, leftPartitionCellCount, rightPartitionCellCount);
+		if(totalGain >= currentMaxGain){
+			currentMaxGain = totalGain;
+			best_partition.assign(partition.begin(), partition.end());
+		}
+		updateNeighborGain(LeftGainList, RightGainList, netArray, cellArray, gain, move_cell_id, netNumber, nodeNumber, partition, CellLockState, max_terminal);
+		//printf("---------------------------update gain list----------------\n");
+		//printGainList(LeftGainList, max_terminal);
+		//printGainList(RightGainList, max_terminal);
+		//printGain(gain, nodeNumber);
+		//printf("best_partition\n");
+		//printPartition(best_partition, nodeNumber, leftPartitionCellCount, rightPartitionCellCount);
+	}
+	//printPartition(best_partition, nodeNumber, leftPartitionCellCount, rightPartitionCellCount);
+	//printf("max gain = %d\n", currentMaxGain);
+
+	FILE *output = fopen("output.txt", "w");
+	for(int i = 1; i <= nodeNumber; i++){
+		fprintf(output, "%d\n", (int)best_partition[i]);
+	}
+	fclose(output);
 	return 0;
 }
