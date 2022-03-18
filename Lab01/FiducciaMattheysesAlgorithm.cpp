@@ -1,31 +1,25 @@
 #include "FiducciaMattheysesAlgorithm.h"
+#include "GainList.h"
 #include <stdbool.h>
 #include <vector>
 #include <unordered_set>
 
 #define AREA_LOW_BLANCED_FACTOR 0.45
-#define AREA_HIGH_BLANCED_FACTOR 0.55
 #define FIND_CELL_ERROR -1
 
 using namespace std;
 using std::vector;
 using std::unordered_set;
 
-double calculate_balanced_factor(int leftPartitionCellCount, int rightPartitionCellCount, int numerator){
-	return (double)(numerator) / (double)(leftPartitionCellCount + rightPartitionCellCount);
-}
+typedef struct vector<unordered_set<int>> vu;
 
-int getMaxGainCell(vector<unordered_set<int>> &leftGainList, vector<unordered_set<int>> &rightGainList, bool *comeFrom, int max_terminal, int leftPartitionCellCount, int rightPartitionCellCount){
+int getMaxGainCell(vu &leftGainList, vu &rightGainList, bool *comeFrom, int max_terminal, int leftPartitionCellCount, int rightPartitionCellCount){
 	int returnCellid;
-
-	double LeftBalanceFactor = calculate_balanced_factor(leftPartitionCellCount - 1, rightPartitionCellCount + 1, leftPartitionCellCount - 1);
-	double RightBalanceFactor = calculate_balanced_factor(leftPartitionCellCount + 1, rightPartitionCellCount - 1, leftPartitionCellCount + 1);
-	
+	//printf("leftPartitionCellCount = %d, rightPartitionCellCount = %d\n", leftPartitionCellCount, rightPartitionCellCount);
 	//the condition that must move the right cell to the left partition
-	if(LeftBalanceFactor <= AREA_LOW_BLANCED_FACTOR){
+	if(leftPartitionCellCount - 1 <= AREA_LOW_BLANCED_FACTOR * (leftPartitionCellCount + rightPartitionCellCount) - 1){
 		for(int i = max_terminal * 2; i >= 0 ;i--){
 			if(!rightGainList[i].empty()){
-				printf("here\n");
 				*(comeFrom) = 1;
 				returnCellid = *(rightGainList[i].begin());
 				return returnCellid;
@@ -34,7 +28,7 @@ int getMaxGainCell(vector<unordered_set<int>> &leftGainList, vector<unordered_se
 	}
 
 	//the condition that must move the left cell to the right partition
-	else if(RightBalanceFactor <= AREA_LOW_BLANCED_FACTOR){
+	else if(rightPartitionCellCount - 1 <= AREA_LOW_BLANCED_FACTOR * (leftPartitionCellCount + rightPartitionCellCount) - 1){
 		for(int i = max_terminal * 2; i >= 0; i--){
 			if(!leftGainList[i].empty()){
 				*(comeFrom) = 0;
@@ -74,16 +68,63 @@ int getMaxGainCell(vector<unordered_set<int>> &leftGainList, vector<unordered_se
 
 		}
 	}
+	(*comeFrom) = 0;
+	printf("Find Cell Error!\n");
 	return FIND_CELL_ERROR;
 }
 
-/*
-vector <bool> Move(vector<unordered_set<int>> &leftGainList, vector<unordered_set<int>> &rightGainList, vector <bool> &partition, vector<unordered_set<int>> &netArray, vector<unordered_set<int>> &cellArray, vector <bool> &CellLockState, int nodeNumber, int *leftPartitionCellCount, int *rightPartitionCellCount){
-	int rest_node = nodeNumber;
-	vector <bool> currentPartition.assign = (partition.begin(), partition.end());
-	while(rest_node > 1){
+void removeFromBucketList(int move_cell_id, bool comeFrom, vu &leftGainList, vu &rightGainList, vector <int> &gain, int max_terminal){
+	int removeGainIndex = gain[move_cell_id] + max_terminal;
 
+	//remove the cell from the left bucketlist
+	if(comeFrom == 0){
+		leftGainList[removeGainIndex].erase(move_cell_id);
+		return;
 	}
-
+	else{
+		rightGainList[removeGainIndex].erase(move_cell_id);
+		return;
+	} 
+	printf("Delete %d error!\n", move_cell_id);
 }
-*/
+
+void updateLockState(int move_cell_id, vector <bool> &CellLockState){
+	CellLockState[move_cell_id] = 1;
+	return;
+}
+
+void updatePartition(int move_cell_id, vector <bool> &partition, int *leftPartitionCellCount, int *rightPartitionCellCount, bool comeFrom){
+	//if the cell come from left bucket list to right bucketlist
+	if(comeFrom == 0){
+		partition[move_cell_id] = 1;
+		(*leftPartitionCellCount)--;
+		(*rightPartitionCellCount)++;
+		return;
+	}
+	//if the cell come from right bucket list to left bucketlist
+	else if(comeFrom == 1){
+		partition[move_cell_id] = 0;
+		(*leftPartitionCellCount)++;
+		(*rightPartitionCellCount)--;
+	}
+	return;
+}
+
+void updateNeighborGain(vu &leftGainList, vu &rightGainList, vu &netArray, vu &cellArray, vector <int> &gain, int move_cell_id, int netNumber, int nodeNumber, vector <bool> &partition, vector <bool> &CellLockState, int max_terminal){
+	//to loop through the net that the target cell connect with, for each net, check for the unlock neighbor to update the gain
+	for(const auto &i : cellArray[move_cell_id]){
+		for(const auto &j : netArray[i]){
+			if(j != move_cell_id && CellLockState[j]==0){
+				//remove neighbor from the bucketlist
+				removeFromBucketList(j, partition[j], leftGainList, rightGainList, gain, max_terminal);
+				
+				//calculate the gain
+				gain[j] = FS(netArray, cellArray, partition, j, netNumber, nodeNumber) - TE(netArray, cellArray, partition, j, netNumber, nodeNumber);
+
+				//insert in the gainlist
+				if(partition[j] == false && CellLockState[j]==0) leftGainList[gain[j] + max_terminal].insert(j);
+				else if(partition[j] == true && CellLockState[j]==0) rightGainList[gain[j] + max_terminal].insert(j);
+			}
+		}
+	}
+}
