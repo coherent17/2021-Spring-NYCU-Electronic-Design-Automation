@@ -3,15 +3,15 @@ CFLAGS = -g -Wall -O3
 CHECKCC = valgrind
 CHECKFLAGS = --leak-check=full -s --track-origins=yes
 OBJS = parsor.o GainList.o FiducciaMattheysesAlgorithm.o
-BINS = main
+BINS = Lab1
+OUT = output.txt
 
 all: $(BINS)
-
 
 %.o: %.cpp %.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BINS): $(BINS).cpp $(OBJS)
+$(BINS): main.cpp $(OBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 sample:
@@ -38,5 +38,17 @@ check2:
 check3:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BINS) input3.txt.hgr
 
+verifier1:
+	chmod +x verifier
+	./verifier input.hgr output.txt
+
+verifier2:
+	chmod +x verifier
+	./verifier input2.txt.hgr output.txt
+
+verifier3:
+	chmod +x verifier
+	./verifier input3.txt.hgr output.txt
+
 clean:
-	rm $(BINS) $(OBJS)
+	rm $(BINS) $(OBJS) $(OUT)
