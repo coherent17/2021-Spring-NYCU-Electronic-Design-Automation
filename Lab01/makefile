@@ -50,5 +50,14 @@ verifier3:
 	chmod +x verifier
 	./verifier input3.txt.hgr output.txt
 
+runall:
+	chmod +x verifier
+	time ./$(BINS) input.hgr
+	./verifier input.hgr $(OUT)
+	time ./$(BINS) input2.txt.hgr
+	./verifier input2.txt.hgr $(OUT)
+	time ./$(BINS) input3.txt.hgr $(OUT)
+	./verifier input3.txt.hgr $(OUT)
+
 clean:
 	rm $(BINS) $(OBJS) $(OUT)
