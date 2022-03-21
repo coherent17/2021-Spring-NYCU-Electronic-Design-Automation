@@ -1,4 +1,3 @@
-#include "FiducciaMattheysesAlgorithm.h"
 #include <stdbool.h>
 #include <vector>
 #include <unordered_set>
@@ -7,30 +6,41 @@ using namespace std;
 using std::vector;
 using std::unordered_set;
 
-vector <bool> init_partition(int nodeNumber, int *leftPartitionCellCount, int *rightPartitionCellCount){
-	vector <bool> partition ((nodeNumber + 1));
+extern int netNumber;
+extern int nodeNumber;
+extern int max_terminal;
+
+typedef vector<unordered_set<int>> vu;
+
+vector <int> init_partition(int *leftPartitionCellCount, int *rightPartitionCellCount){
+	vector <int> partition ((nodeNumber + 1));
 	*leftPartitionCellCount = 0;
 	*rightPartitionCellCount = 0;
 	for(int i = 1; i <=nodeNumber; i++){
-		if(i % 2 == 0) (*leftPartitionCellCount)++ ;
-		else (*rightPartitionCellCount)++;
-		partition[i] = i % 2;
+		if(i <= nodeNumber/2){
+			(*leftPartitionCellCount)++ ;
+			partition[i] = 0;
+		}
+		else{
+			(*rightPartitionCellCount)++;
+			partition[i] = 1;
+		}
 	}
 	return partition;
 }
 
-void printPartition(vector <bool> &partition, int nodeNumber, int leftPartitionCellCount, int rightPartitionCellCount){
-	for(int i = 1; i <= nodeNumber; i++){
+void printPartition(vector <int> &partition, int leftPartitionCellCount, int rightPartitionCellCount){
+	/*for(int i = 1; i <= nodeNumber; i++){
 		if(partition[i] == 0){
 			printf("%d : left\n", i);
 		}
 		else printf("%d : right\n", i);
 	}
-	printf("\n");
+	printf("\n");*/
 	printf("leftPartitionCellCount = %d, rightPartitionCellCount = %d\n", leftPartitionCellCount, rightPartitionCellCount);
 }
 
-int FS(vector<unordered_set<int>> &netArray, vector<unordered_set<int>> &cellArray, vector <bool> &partition, int targetCell, int netNumber, int nodeNumber){
+int FS(vu &netArray, vu &cellArray, vector <int> &partition, int targetCell){
 	int result = 0;
 	int nums_net_cell_on_oneside = 0;
 	for(const auto &i : cellArray[targetCell]){
@@ -50,7 +60,7 @@ int FS(vector<unordered_set<int>> &netArray, vector<unordered_set<int>> &cellArr
 	return result;
 }
 
-int TE(vector<unordered_set<int>> &netArray, vector<unordered_set<int>> &cellArray, vector <bool> &partition, int targetCell, int netNumber, int nodeNumber){
+int TE(vu &netArray, vu &cellArray, vector <int> &partition, int targetCell){
 	int result = 0;
 	int nums_net_cell_on_oneside = 0;
 	for(const auto &i : cellArray[targetCell]){
@@ -70,29 +80,29 @@ int TE(vector<unordered_set<int>> &netArray, vector<unordered_set<int>> &cellArr
 	return result;	
 }
 
-vector <int> calculate_all_gain(vector<unordered_set<int>> &netArray, vector<unordered_set<int>> &cellArray, vector <bool> &partition, int netNumber, int nodeNumber){
+vector <int> calculate_all_gain(vu &netArray, vu &cellArray, vector <int> &partition){
 	vector <int> gain (nodeNumber + 1);
 	for(int i = 1; i <= nodeNumber; i++){
-		gain[i] = FS(netArray, cellArray, partition, i, netNumber, nodeNumber) - TE(netArray, cellArray, partition, i, netNumber, nodeNumber);
+		gain[i] = FS(netArray, cellArray, partition, i) - TE(netArray, cellArray, partition, i);
 	}
 	return gain;
 }
 
-void printGain(vector <int> &gain, int nodeNumber){
+void printGain(vector <int> &gain){
 	for(int i = 1; i <= nodeNumber; i++){
 		printf("%d ", gain[i]);
 	}
 	printf("\n");
 }
 
-void BuildGainList(vector <int> &gain, int max_terminal, vector<unordered_set<int>> &leftGainList, vector<unordered_set<int>> &rightGainList, vector <bool> &partition){
+void BuildGainList(vector <int> &gain, vu &leftGainList, vu &rightGainList, vector <int> &partition){
 	for(int i = 1; i < (int)gain.size(); i++){
-		if(partition[i] == false) leftGainList[gain[i] + max_terminal].insert(i);
-		else if(partition[i] == true) rightGainList[gain[i] + max_terminal].insert(i);
+		if(partition[i] == 0) leftGainList[gain[i] + max_terminal].insert(i);
+		else if(partition[i] == 1) rightGainList[gain[i] + max_terminal].insert(i);
 	}
 }
 
-void printGainList(vector <unordered_set<int>> GainList, int max_terminal){
+void printGainList(vu GainList){
 	int i = 2 * max_terminal;
 	while(i >= 0){
 		printf("Gain = %d\t:", i - max_terminal);
@@ -105,13 +115,19 @@ void printGainList(vector <unordered_set<int>> GainList, int max_terminal){
 	printf("\n");
 }
 
-vector <bool> BuildCellLockState(int nodeNumber){
+vector <int> BuildCellLockState(){
 	//define (0, 1) = (unlock, lock)
-	vector <bool> CellLockState (nodeNumber + 1, 0);
+	vector <int> CellLockState (nodeNumber + 1, 0);
 	return CellLockState;
 }
 
-void printCellLockState(vector <bool> &CellLockState){
+void unlockClockState(vector <int>& CellLockState){
+	for(int i = 1; i <= nodeNumber; i++){
+		CellLockState[i] = 0;
+	}
+}
+
+void printCellLockState(vector <int> &CellLockState){
 	for(int i = 1; i < (int)CellLockState.size(); i++){
 		if(CellLockState[i] == 0) printf("%d cell: Unlocked\n", i);
 		else printf("%d cell: Locked\n", i);

@@ -1,20 +1,21 @@
 #include "parsor.h"
 #include <vector>
 #include <unordered_set>
-#include <iostream>
 #include <string.h>
 
 using namespace std;
 using std::vector;
 using std::unordered_set;
 
-vector<unordered_set<int>> BuildNetArray(char *filename, int *netNumber, int *nodeNumber){
+typedef struct vector<unordered_set<int>> vu;
+
+vu BuildNetArray(char *filename, int *netNumber, int *nodeNumber){
 	FILE *input = fopen(filename, "r");
 	fscanf(input, "%d %d", &(*netNumber), &(*nodeNumber));
 	fgetc(input);
 
 	int netArrayindex = 1;
-	vector<unordered_set<int>> netArray((*netNumber) + 1);
+	vu netArray((*netNumber) + 1);
 	char buffer[150000];
 	
 	while(fscanf(input, "%[^\n]", buffer)!=EOF){	
@@ -30,7 +31,7 @@ vector<unordered_set<int>> BuildNetArray(char *filename, int *netNumber, int *no
 	return netArray;
 }
 
-vector<unordered_set<int>> BuildCellArray(char *filename, int *max_terminal){
+vu BuildCellArray(char *filename, int *max_terminal){
 	FILE *input = fopen(filename, "r");
 	int netNumber;
 	int nodeNumber;
@@ -43,7 +44,7 @@ vector<unordered_set<int>> BuildCellArray(char *filename, int *max_terminal){
 		pinCount[i] = 0;
 	}
 
-	vector<unordered_set<int>> cellArray(nodeNumber + 1);
+	vu cellArray(nodeNumber + 1);
 
 	int netIndex = 1;
 	char buffer[150000];
@@ -66,7 +67,7 @@ vector<unordered_set<int>> BuildCellArray(char *filename, int *max_terminal){
 	return cellArray;
 }
 
-void printNetArray(vector<unordered_set<int>> netArray){
+void printNetArray(vu netArray){
 	for(int i = 1; i < (int)netArray.size(); i++){
 		printf("Net number = %d: ", i);
 		for(const auto &s : netArray[i]){
@@ -76,7 +77,7 @@ void printNetArray(vector<unordered_set<int>> netArray){
 	}
 }
 
-void printCellArray(vector<unordered_set<int>> cellArray){
+void printCellArray(vu cellArray){
 	for(int i = 1; i < (int)cellArray.size(); i++){
 		printf("Cell id = %d: ", i);
 		for(const auto &s : cellArray[i]){

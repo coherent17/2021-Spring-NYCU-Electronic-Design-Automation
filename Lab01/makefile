@@ -1,7 +1,5 @@
 CC = g++
 CFLAGS = -g -Wall -O3
-CHECKCC = valgrind
-CHECKFLAGS = --leak-check=full -s --track-origins=yes
 OBJS = parsor.o GainList.o FiducciaMattheysesAlgorithm.o
 BINS = Lab1
 OUT = output.txt
@@ -12,10 +10,7 @@ all: $(BINS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BINS): main.cpp $(OBJS)
-	$(CC) $(CFLAGS) $^ -o $@
-
-sample:
-	./$(BINS) sample.hgr
+	$(CC) $(CFLAGS) -fopenmp $^ -o $@
 
 do1:
 	./$(BINS) input.hgr
@@ -26,17 +21,9 @@ do2:
 do3:
 	./$(BINS) input3.txt.hgr
 
-checksample:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BINS) sample.hgr
-
-check1:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BINS) input.hgr
-
-check2:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BINS) input2.txt.hgr
-
-check3:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BINS) input3.txt.hgr
+do_shmetis:
+	chmod +x shmetis
+	./shmetis input3.txt.hgr 2 5
 
 verifier1:
 	chmod +x verifier
@@ -54,8 +41,10 @@ runall:
 	chmod +x verifier
 	time ./$(BINS) input.hgr
 	./verifier input.hgr $(OUT)
+
 	time ./$(BINS) input2.txt.hgr
 	./verifier input2.txt.hgr $(OUT)
+
 	time ./$(BINS) input3.txt.hgr $(OUT)
 	./verifier input3.txt.hgr $(OUT)
 
