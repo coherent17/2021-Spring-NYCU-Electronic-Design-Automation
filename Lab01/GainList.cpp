@@ -17,14 +17,8 @@ vector <int> init_partition(int *leftPartitionCellCount, int *rightPartitionCell
 	*leftPartitionCellCount = 0;
 	*rightPartitionCellCount = 0;
 	for(int i = 1; i <=nodeNumber; i++){
-		if(i <= nodeNumber/2){
-			(*leftPartitionCellCount)++ ;
-			partition[i] = 0;
-		}
-		else{
-			(*rightPartitionCellCount)++;
-			partition[i] = 1;
-		}
+		partition[i] = 0;
+		(*leftPartitionCellCount)++;
 	}
 	return partition;
 }
@@ -82,6 +76,7 @@ int TE(vu &netArray, vu &cellArray, vector <int> &partition, int targetCell){
 
 vector <int> calculate_all_gain(vu &netArray, vu &cellArray, vector <int> &partition){
 	vector <int> gain (nodeNumber + 1);
+
 	for(int i = 1; i <= nodeNumber; i++){
 		gain[i] = FS(netArray, cellArray, partition, i) - TE(netArray, cellArray, partition, i);
 	}

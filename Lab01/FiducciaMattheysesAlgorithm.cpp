@@ -20,8 +20,8 @@ int getMaxGainCell(vu &leftGainList, vu &rightGainList, bool *comeFrom, int left
 	int returnCellid;
 	//printf("leftPartitionCellCount = %d, rightPartitionCellCount = %d\n", leftPartitionCellCount, rightPartitionCellCount);
 	//the condition that must move the right cell to the left partition
-	if(leftPartitionCellCount - 1 <= AREA_LOW_BLANCED_FACTOR * (leftPartitionCellCount + rightPartitionCellCount) - 1){
-		for(int i = max_terminal * 2; i >= 0 ;i--){
+	if(leftPartitionCellCount - 1 < AREA_LOW_BLANCED_FACTOR * (leftPartitionCellCount + rightPartitionCellCount) - 1){
+		for(int i = 2 * max_terminal; i >= 0 ;i--){
 			if(!rightGainList[i].empty()){
 				*(comeFrom) = 1;
 				returnCellid = *(rightGainList[i].begin());
@@ -31,8 +31,8 @@ int getMaxGainCell(vu &leftGainList, vu &rightGainList, bool *comeFrom, int left
 	}
 
 	//the condition that must move the left cell to the right partition
-	else if(rightPartitionCellCount - 1 <= AREA_LOW_BLANCED_FACTOR * (leftPartitionCellCount + rightPartitionCellCount) - 1){
-		for(int i = max_terminal * 2; i >= 0; i--){
+	else if(rightPartitionCellCount - 1 < AREA_LOW_BLANCED_FACTOR * (leftPartitionCellCount + rightPartitionCellCount) - 1){
+		for(int i = 2 * max_terminal; i >= 0; i--){
 			if(!leftGainList[i].empty()){
 				*(comeFrom) = 0;
 				returnCellid = *(leftGainList[i].begin());
@@ -43,7 +43,7 @@ int getMaxGainCell(vu &leftGainList, vu &rightGainList, bool *comeFrom, int left
 
 	//move which cell will not violate the area constraint
 	else{
-		for(int i = max_terminal * 2; i >= 0; i--){
+		for(int i = 2 * max_terminal; i >= 0; i--){
 
 			//if both the gain list are empty for this gain value
 			if(leftGainList[i].empty() && rightGainList[i].empty()) continue;
@@ -95,7 +95,6 @@ void removeFromBucketList(int move_cell_id, bool comeFrom, vu &leftGainList, vu 
 		rightGainList[removeGainIndex].erase(move_cell_id);
 		return;
 	} 
-	printf("Delete %d error!\n", move_cell_id);
 }
 
 void updateLockState(int move_cell_id, vector <int> &CellLockState){

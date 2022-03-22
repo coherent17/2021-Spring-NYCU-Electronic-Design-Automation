@@ -5,7 +5,7 @@
 #include <unordered_set>
 #include <omp.h>
 
-#define CUT_OFF_TIME 30
+#define CUT_OFF_TIME 28
 
 using namespace std;
 using std::vector;
@@ -60,28 +60,34 @@ int main(int argc, char *argv[]){
 	vector <int> best_partition;
 	best_partition.assign(partition.begin(), partition.end());
 	int currentMaxGain = 0;
+	int left_best_partition_count = leftPartitionCellCount;
+	int right_best_partition_count = rightPartitionCellCount;
 
 	while(1){
 		int totalGain = currentMaxGain;
-		for(int i = 1; i <= nodeNumber; i++){
+		for(int i = 1; i <= nodeNumber / 2; i++){
 			move_cell_id = getMaxGainCell(LeftGainList, RightGainList, &comeFrom, leftPartitionCellCount, rightPartitionCellCount);
 			totalGain += gain[move_cell_id];
+
+			removeFromBucketList(move_cell_id, comeFrom, LeftGainList, RightGainList, gain);
+			updateLockState(move_cell_id, CellLockState);
+			updatePartition(move_cell_id, partition, &leftPartitionCellCount, &rightPartitionCellCount, comeFrom);
 
 			//to decide whether update the best partition due to total gain
 			if(totalGain > currentMaxGain){
 				currentMaxGain = totalGain;
 				best_partition.assign(partition.begin(), partition.end());
+				left_best_partition_count = leftPartitionCellCount;
+				right_best_partition_count = rightPartitionCellCount;
 				//printPartition(partition, leftPartitionCellCount, rightPartitionCellCount);
 			}
-
-			removeFromBucketList(move_cell_id, comeFrom, LeftGainList, RightGainList, gain);
-			updateLockState(move_cell_id, CellLockState);
-			updatePartition(move_cell_id, partition, &leftPartitionCellCount, &rightPartitionCellCount, comeFrom);
 			updateNeighborGain(LeftGainList, RightGainList, netArray, cellArray, gain, move_cell_id, partition, CellLockState);
-
+			gain[move_cell_id] = -1 * gain[move_cell_id];
 		}
-		//partition.assign(best_partition.begin(), best_partition.end());
-		gain = calculate_all_gain(netArray, cellArray, partition);
+
+		leftPartitionCellCount = left_best_partition_count;
+		rightPartitionCellCount = right_best_partition_count;
+		partition.assign(best_partition.begin(), best_partition.end());
 		BuildGainList(gain, LeftGainList, RightGainList, partition);
 		unlockClockState(CellLockState);
 
