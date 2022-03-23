@@ -59,12 +59,11 @@ int main(int argc, char *argv[]){
 	bool comeFrom;
 	vector <int> best_partition;
 	best_partition.assign(partition.begin(), partition.end());
-	int currentMaxGain = 0;
 	int left_best_partition_count = leftPartitionCellCount;
 	int right_best_partition_count = rightPartitionCellCount;
-
+	int totalGain = 0,currentMaxGain=0;
 	while(1){
-		int totalGain = currentMaxGain;
+		
 		for(int i = 1; i <= nodeNumber / 2; i++){
 			move_cell_id = getMaxGainCell(LeftGainList, RightGainList, &comeFrom, leftPartitionCellCount, rightPartitionCellCount);
 			totalGain += gain[move_cell_id];
@@ -84,12 +83,12 @@ int main(int argc, char *argv[]){
 			updateNeighborGain(LeftGainList, RightGainList, netArray, cellArray, gain, move_cell_id, partition, CellLockState);
 			gain[move_cell_id] = -1 * gain[move_cell_id];
 		}
-
+		totalGain = currentMaxGain;
 		leftPartitionCellCount = left_best_partition_count;
 		rightPartitionCellCount = right_best_partition_count;
 		partition.assign(best_partition.begin(), best_partition.end());
-		BuildGainList(gain, LeftGainList, RightGainList, partition);
 		unlockClockState(CellLockState);
+		BuildGainList(gain, LeftGainList, RightGainList, partition);
 
 		//get the current time, and determine whether to output the current best partition or not
 		if(omp_get_wtime() - start_time >= CUT_OFF_TIME) break;	
