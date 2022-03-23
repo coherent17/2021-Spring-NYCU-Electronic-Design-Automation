@@ -5,13 +5,14 @@
 #include <unordered_set>
 #include <omp.h>
 
-#define CUT_OFF_TIME 28
+#define CUT_OFF_TIME 29
 
 using namespace std;
 using std::vector;
 using std::unordered_set;
 
 typedef vector<unordered_set<int>> vu;
+double start_time = omp_get_wtime();									//get the time that the program start
 
 //extern global variable
 int netNumber;															//the net count of the netlist
@@ -20,9 +21,6 @@ int max_terminal;														//the maximum net that the cell connect to
 
 int main(int argc, char *argv[]){
 	char *input_filename = *(argv + 1);
-
-	double start_time = omp_get_wtime();								//get the time that the program start
-
 
 	vector<unordered_set<int>> netArray;								//the 2D array to store the cell which the net connect to
 	vector<unordered_set<int>> cellArray;								//the 2D array to store the net that the cell connect to
@@ -62,8 +60,9 @@ int main(int argc, char *argv[]){
 	int left_best_partition_count = leftPartitionCellCount;
 	int right_best_partition_count = rightPartitionCellCount;
 	int totalGain = 0,currentMaxGain=0;
+
+	//iterate until the times up
 	while(1){
-		
 		for(int i = 1; i <= nodeNumber / 2; i++){
 			move_cell_id = getMaxGainCell(LeftGainList, RightGainList, &comeFrom, leftPartitionCellCount, rightPartitionCellCount);
 			totalGain += gain[move_cell_id];
@@ -71,27 +70,24 @@ int main(int argc, char *argv[]){
 			removeFromBucketList(move_cell_id, comeFrom, LeftGainList, RightGainList, gain);
 			updateLockState(move_cell_id, CellLockState);
 			updatePartition(move_cell_id, partition, &leftPartitionCellCount, &rightPartitionCellCount, comeFrom);
-
+			updateNeighborGain(LeftGainList, RightGainList, netArray, cellArray, gain, move_cell_id, partition, CellLockState);
+			gain[move_cell_id] = -1 * gain[move_cell_id];
 			//to decide whether update the best partition due to total gain
 			if(totalGain > currentMaxGain){
 				currentMaxGain = totalGain;
 				best_partition.assign(partition.begin(), partition.end());
 				left_best_partition_count = leftPartitionCellCount;
 				right_best_partition_count = rightPartitionCellCount;
-				//printPartition(partition, leftPartitionCellCount, rightPartitionCellCount);
 			}
-			updateNeighborGain(LeftGainList, RightGainList, netArray, cellArray, gain, move_cell_id, partition, CellLockState);
-			gain[move_cell_id] = -1 * gain[move_cell_id];
 		}
+		//get the current time, and determine whether to output the current best partition or not
+		if(omp_get_wtime() - start_time > CUT_OFF_TIME) break;
 		totalGain = currentMaxGain;
 		leftPartitionCellCount = left_best_partition_count;
 		rightPartitionCellCount = right_best_partition_count;
 		partition.assign(best_partition.begin(), best_partition.end());
 		unlockClockState(CellLockState);
 		BuildGainList(gain, LeftGainList, RightGainList, partition);
-
-		//get the current time, and determine whether to output the current best partition or not
-		if(omp_get_wtime() - start_time >= CUT_OFF_TIME) break;	
 	}
 
 	//output the heuristic partition
