@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
 
 	//pseudo random seperate the cell into two partition
 	partition =  init_partition(&leftPartitionCellCount, &rightPartitionCellCount);
-	printPartition(partition, leftPartitionCellCount, rightPartitionCellCount);
+	//printPartition(partition, leftPartitionCellCount, rightPartitionCellCount);
 
 	//calculate the gain of all if the cell
 	gain = calculate_all_gain(netArray, cellArray, partition);
