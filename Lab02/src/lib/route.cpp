@@ -13,13 +13,14 @@ void bfs(Grid *grid, Net net){
 	int dx[] = {0, -1,  0, 1};
 	int dy[] = {1,  0, -1, 0};
 
-	queue <pair<int, int>> q;
+	queue <pair<int, int>> q;	//store the location (x, y) and distance(currentDistance, 0) repectively
 
 	int distance = 0;
+
 	//push the entrance into the queue
+	grid->gridState[net.sourceX][net.sourceY] = 0;
 	q.push({net.sourceX, net.sourceY});
 	q.push({distance + 1, 0});
-	grid->gridState[net.sourceX][net.sourceY] = 0;
 
 	while(!q.empty()){
 		int x = q.front().first, y = q.front().second;
