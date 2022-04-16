@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifndef _READFILE_H_
 #define _READFILE_H_
 
