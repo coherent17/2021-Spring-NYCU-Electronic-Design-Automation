@@ -31,6 +31,9 @@ void bfs(Grid *grid, Net net){
 			int new_x = x + dx[i];
 			int new_y = y + dy[i];
 
+			//if the seed spread to the target -> break the stop wave propagation
+			if(new_x == net.targetX && new_y == net.targetY) return;
+
 			if(new_x < 0 || new_x >= grid->col || new_y < 0 || new_y >= grid->row || grid->gridState[new_x][new_y] == BLOCK_OCCUPIED || grid->gridState[new_x][new_y] == NET_OCCUPIED || grid->gridState[new_x][new_y] >= 0) continue;
 			else{
 				grid->gridState[new_x][new_y] = current_distance;
