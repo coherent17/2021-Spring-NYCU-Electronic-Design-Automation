@@ -64,6 +64,7 @@ void printGrid(Grid *grid){
 
 	printf("Current GridState: (E: empty, X: Block, N: Net)\n");
 
+	/*
 	printf("Grid index version:\n");
 	for(int i = 0; i < grid->row; i++){
 		for(int j = 0; j < grid->col; j++){
@@ -75,18 +76,18 @@ void printGrid(Grid *grid){
 		printf("\n");
 	}
 	printf("\n\n");
-
-	/*
+	*/
+	
 	printf("(0, 0) @ leftDown version:\n");
 	for(int j = grid->col - 1; j >= 0; j--){
 		for(int i = 0; i < grid->row; i++){
-			if(grid->gridState[i][j] == EMPTY_OCCUPIED) printf("E ");
-			else if(grid->gridState[i][j] == BLOCK_OCCUPIED) printf("X ");
-			else if(grid->gridState[i][j] == NET_OCCUPIED) printf("N ");
-			else printf("%d ", grid->gridState[i][j]);
+			if(grid->gridState[i][j] == EMPTY_OCCUPIED) printf(" E ");
+			else if(grid->gridState[i][j] == BLOCK_OCCUPIED) printf(" X ");
+			else if(grid->gridState[i][j] == NET_OCCUPIED) printf(" N ");
+			else printf("%2d ", grid->gridState[i][j]);
 		}
 		printf("\n");
 	}
 	printf("\n");
-	*/
+	
 }
