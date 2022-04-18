@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "readfile.h"
-#include "grid.h"
 
 void readfile(FILE *input, int *ROW, int *COL, int *NumBlock, Block **BlockArray, int *NumNet, Net **NetArray){
 	fscanf(input, "%*s %d", &(*ROW));

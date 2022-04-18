@@ -3,8 +3,9 @@
 #ifndef _GRID_H_
 #define _GRID_H_
 
-#define EMPTY_OCCUPIED -1
-#define BLOCK_OCCUPIED -2
+#define EMPTY_OCCUPIED 0
+#define BLOCK_OCCUPIED -1
+#define PIN_OCCUPIED -2
 #define NET_OCCUPIED -3
 
 typedef struct _grid{

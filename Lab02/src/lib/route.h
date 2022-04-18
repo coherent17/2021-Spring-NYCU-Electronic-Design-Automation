@@ -4,6 +4,11 @@
 #ifndef _ROUTE_H_
 #define _ROUTE_H_
 
-void bfs(Grid *grid, Net net);
+typedef struct point{
+	int x;
+	int y;
+} Point;
+
+void routeOneNet(Grid *grid, Net net);
 
 #endif

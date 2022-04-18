@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 	grid = createGrid(ROW, COL, BlockArray, NumBlock, NetArray, NumNet);
 	printGrid(grid);
 	
-	bfs(grid, NetArray[0]);
+	routeOneNet(grid, NetArray[0]);
 	printGrid(grid);
 
 	freeGrid(grid);

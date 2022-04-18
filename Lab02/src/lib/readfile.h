@@ -18,6 +18,7 @@ typedef struct _Net{
 	int sourceY;
 	int targetX;
 	int targetY;
+	int gridUsage;
 } Net;
 
 void readfile(FILE *input, int *ROW, int *COL, int *NumBlock, Block **BloclArray, int *NumNet, Net **NetArray);

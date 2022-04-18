@@ -32,7 +32,7 @@ Grid *createGrid(int row, int col, Block *BlockArray, int NumBlock, Net *NetArra
 
 		for(int x = LeftDownX; x <= RightUpX; x++){
 			for(int y = LeftDownY; y <= RightUpY; y++){
-				newGrid->gridState[x][y] = BLOCK_OCCUPIED;
+				newGrid->gridState[y][x] = BLOCK_OCCUPIED;
 			}
 		}
 	}
@@ -43,8 +43,8 @@ Grid *createGrid(int row, int col, Block *BlockArray, int NumBlock, Net *NetArra
 		int targetX = NetArray[i].targetX;
 		int targetY = NetArray[i].targetY;
 
-		newGrid->gridState[sourceX][sourceY] = NET_OCCUPIED;
-		newGrid->gridState[targetX][targetY] = NET_OCCUPIED;
+		newGrid->gridState[sourceY][sourceX] = PIN_OCCUPIED;
+		newGrid->gridState[targetY][targetX] = PIN_OCCUPIED;
 	}
 
 	return newGrid;
@@ -63,26 +63,13 @@ void printGrid(Grid *grid){
 	printf("Grid Size <ROW> <COL>: %d %d\n\n", grid->row, grid->col);
 
 	printf("Current GridState: (E: empty, X: Block, N: Net)\n");
-
-	/*
-	printf("Grid index version:\n");
-	for(int i = 0; i < grid->row; i++){
+	
+	printf("(0, 0) @ leftDown version:\n");
+	for(int i = grid->row - 1; i >= 0; i--){
 		for(int j = 0; j < grid->col; j++){
 			if(grid->gridState[i][j] == EMPTY_OCCUPIED) printf(" E ");
 			else if(grid->gridState[i][j] == BLOCK_OCCUPIED) printf(" X ");
-			else if(grid->gridState[i][j] == NET_OCCUPIED) printf(" N ");
-			else printf("%2d ", grid->gridState[i][j]);
-		}
-		printf("\n");
-	}
-	printf("\n\n");
-	*/
-	
-	printf("(0, 0) @ leftDown version:\n");
-	for(int j = grid->col - 1; j >= 0; j--){
-		for(int i = 0; i < grid->row; i++){
-			if(grid->gridState[i][j] == EMPTY_OCCUPIED) printf(" E ");
-			else if(grid->gridState[i][j] == BLOCK_OCCUPIED) printf(" X ");
+			else if(grid->gridState[i][j] == PIN_OCCUPIED) printf(" P ");
 			else if(grid->gridState[i][j] == NET_OCCUPIED) printf(" N ");
 			else printf("%2d ", grid->gridState[i][j]);
 		}
