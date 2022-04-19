@@ -24,6 +24,9 @@ int main(int argc, char *argv[]){
 
 
 	readfile(input, &ROW, &COL, &NumBlock, &BlockArray, &NumNet, &NetArray);
+
+	//sort the netarray due to the distance between the source and target
+	sortNetArray(NetArray, NumNet);
 	printInputFile(ROW, COL, NumBlock, BlockArray, NumNet, NetArray);
 
 
@@ -31,27 +34,16 @@ int main(int argc, char *argv[]){
 	printGrid(grid);
 
 	//start to route
-
-	bool isValidRouting = false;
-	
-	vector <Point> Path1 = routeOneNet(grid, NetArray[0], &isValidRouting);
-	if(isValidRouting) printf("It's ValidRouting!\n");
-	else printf("It's not a ValidRouting!\n");
-	printf("grid usage: %lu\n", (Path1.size()-1));
-	printPath(Path1);
-	updateGridState(Path1, grid, NetArray[0]);
-	printGrid(grid);
-
-
-	// isValidRouting = false;
-
-	// vector <Point> Path2 = routeOneNet(grid, NetArray[0], &isValidRouting);
-	// if(isValidRouting) printf("It's ValidRouting!\n");
-	// else printf("It's not a ValidRouting!\n");
-	// printf("grid usage: %lu\n", (Path2.size()-1));
-	// printPath(Path2);
-	// updateGridState(Path2, grid, NetArray[0]);
-	// printGrid(grid);
+	for(int i = 0; i < NumNet; i++){
+		bool isValidRouting = false;
+		vector <Point> Path = routeOneNet(grid, NetArray[i], &isValidRouting);
+		if(isValidRouting) printf("It's ValidRouting!\n");
+		else printf("It's not a ValidRouting!\n");
+		printf("grid usage: %lu\n", (Path.size()-1));
+		printPath(Path);
+		updateGridState(Path, grid, NetArray[i]);
+		printGrid(grid);
+	}
 
 	freeGrid(grid);
 	free(BlockArray);

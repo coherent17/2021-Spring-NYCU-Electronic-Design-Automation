@@ -23,5 +23,6 @@ typedef struct _Net{
 
 void readfile(FILE *input, int *ROW, int *COL, int *NumBlock, Block **BloclArray, int *NumNet, Net **NetArray);
 void printInputFile(int ROW, int COL, int NumBlock, Block *BlockArray, int NumNet, Net *NetArray);
+void sortNetArray(Net *NetArray, int NumNet);
 
 #endif

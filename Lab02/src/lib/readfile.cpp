@@ -35,3 +35,17 @@ void printInputFile(int ROW, int COL, int NumBlock, Block *BlockArray, int NumNe
 		printf("\tNet %d: <NetName> <sourceX> <sourceY> <targetX> <targetY>: %s %d %d %d %d\n", i + 1, NetArray[i].NetName, NetArray[i].sourceX, NetArray[i].sourceY, NetArray[i].targetX, NetArray[i].targetY);
 	}
 }
+
+
+//quicksort the net by the distance from source to target
+int comparator(const void *p, const void *q){
+	Net n1 = *(const Net *)p;
+    Net n2 = *(const Net *)q;
+	int distance_n1 = abs(n1.sourceX - n1.targetX) + abs(n1.sourceY - n1.targetY);
+	int distance_n2 = abs(n2.sourceX - n2.targetX) + abs(n2.sourceY - n2.targetY);
+	return distance_n1 > distance_n2;
+}
+
+void sortNetArray(Net *NetArray, int NumNet){
+	qsort((void*)NetArray, NumNet, sizeof(NetArray[0]), comparator);
+}
