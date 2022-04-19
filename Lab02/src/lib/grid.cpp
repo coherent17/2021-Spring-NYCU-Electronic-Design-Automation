@@ -70,7 +70,7 @@ void printGrid(Grid *grid){
 			if(grid->gridState[i][j] == EMPTY_OCCUPIED) printf(" E ");
 			else if(grid->gridState[i][j] == BLOCK_OCCUPIED) printf(" X ");
 			else if(grid->gridState[i][j] == PIN_OCCUPIED) printf(" P ");
-			else if(grid->gridState[i][j] == NET_OCCUPIED) printf(" N ");
+			else if(grid->gridState[i][j] == NET_OCCUPIED) printf(" * ");
 			else printf("%2d ", grid->gridState[i][j]);
 		}
 		printf("\n");
