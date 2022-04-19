@@ -1,6 +1,7 @@
 #include <queue>
 #include <utility>
 #include <vector>
+#include <bits/stdc++.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include "readfile.h"
@@ -35,7 +36,7 @@ void printDistance(vector<vector<int>> distance, Grid *grid){
 }
 
 
-void routeOneNet(Grid *grid, Net net){
+vector <Point> routeOneNet(Grid *grid, Net net, bool *isValidRouting){
 
 	//move to the neighbor (up, left, down, right)
 	int dx[4] = {0, -1, 0, 1};
@@ -87,6 +88,7 @@ void routeOneNet(Grid *grid, Net net){
 
 			//if meet the target -> return
 			if(new_x == net.targetX && new_y == net.targetY){
+				*isValidRouting = true;
 				Parent[new_y][new_x].x = x;
 				Parent[new_y][new_x].y = y;
 				canBreak = true;
@@ -100,17 +102,37 @@ void routeOneNet(Grid *grid, Net net){
 				Parent[new_y][new_x].y = y;
 				q.push({new_x, new_y});
 				q.push({current_distance + 1, 0});
-				printDistance(distance, grid);
+				//printDistance(distance, grid);
 			}
 		}
 		if(canBreak) break;
 	}
 
-	
+	vector <Point> Path;
 	for(pair <int, int> temp = {net.targetX, net.targetY}; ;temp = {Parent[temp.second][temp.first].x, Parent[temp.second][temp.first].y}){
-	if(temp.first == -1 && temp.second == -1) break;
-	 	printf("(%d ,%d) ->", Parent[temp.second][temp.first].x, Parent[temp.second][temp.first].y);
+		if(Parent[temp.second][temp.first].x == -1 && Parent[temp.second][temp.first].y == -1) break;
+		else{
+			Point temp_point;
+			temp_point.x = Parent[temp.second][temp.first].x;
+			temp_point.y = Parent[temp.second][temp.first].y;
+			Path.emplace_back(temp_point);		
+		}
 	}
-	
+
+	std::reverse(Path.begin(), Path.end());
+	return Path;
+}
+
+void printPath(vector <Point> Path){
+	for(auto it = Path.begin(); it != Path.end(); it++){
+		printf("(%d,%d) -> ", (*it).x, (*it).y);
+	}
 	printf("\n");
 } 
+
+void updateGridState(vector <Point> Path, Grid *grid, Net net){
+	for(auto it = Path.begin(); it != Path.end(); it++){
+		if(((*it).x == net.sourceX && (*it).y == net.sourceY) || ((*it).x == net.targetX && (*it).y == net.targetY)) continue;
+		grid->gridState[(*it).y][(*it).x] = NET_OCCUPIED;
+	}
+}
