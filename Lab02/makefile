@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -O3
 BINS = main
 SRC_DIRS := src/lib
 
@@ -18,7 +18,7 @@ $(BINS): src/main.cpp $(OBJS)
 	$(CC) $(CFLAGS)  $^ -o $@
 
 do:
-	$(CHECKCC) $(CHECKFLAGS) ./main Benchmark/case2.in
+	$(CHECKCC) $(CHECKFLAGS) ./main Benchmark/case1.in
 
 clean:
 	rm -rf src/lib/*.o main
