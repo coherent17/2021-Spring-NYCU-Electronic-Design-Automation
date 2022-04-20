@@ -109,10 +109,13 @@ vector <Point> routeOneNet(Grid *grid, Net net, bool *isValidRouting){
 	}
 
 	vector <Point> Path;
+	Point temp_point;
+	temp_point.x = net.targetX;
+	temp_point.y = net.targetY;
+	Path.emplace_back(temp_point);	
 	for(pair <int, int> temp = {net.targetX, net.targetY}; ;temp = {Parent[temp.second][temp.first].x, Parent[temp.second][temp.first].y}){
 		if(Parent[temp.second][temp.first].x == -1 && Parent[temp.second][temp.first].y == -1) break;
 		else{
-			Point temp_point;
 			temp_point.x = Parent[temp.second][temp.first].x;
 			temp_point.y = Parent[temp.second][temp.first].y;
 			Path.emplace_back(temp_point);		
@@ -134,5 +137,31 @@ void updateGridState(vector <Point> Path, Grid *grid, Net net){
 	for(auto it = Path.begin(); it != Path.end(); it++){
 		if(((*it).x == net.sourceX && (*it).y == net.sourceY) || ((*it).x == net.targetX && (*it).y == net.targetY)) continue;
 		grid->gridState[(*it).y][(*it).x] = NET_OCCUPIED;
+	}
+}
+
+
+void outputFile(FILE *output, Net *NetArray, int NumNet, vector <vector <Point>> PathArray){
+	for(int i = 0; i < NumNet; i++){
+		fprintf(stdout, "%s %d\n", NetArray[i].NetName, NetArray[i].gridUsage);
+		fprintf(stdout, "begin\n");
+
+		vector <Point> currentPath = PathArray[i];
+		Point current_point = currentPath[0];
+		fprintf(stdout, "%d %d ", current_point.x, current_point.y);
+
+		for(int j = 0; j < (int)currentPath.size() - 1; j++){
+			if((currentPath[j + 1].x == current_point.x) || (currentPath[j + 1].y == current_point.y)){
+				continue;
+			}
+			else{
+				current_point = currentPath[j];
+				j--;
+				fprintf(stdout, "%d %d\n", current_point.x, current_point.y);
+				fprintf(stdout, "%d %d ", current_point.x, current_point.y);
+			}
+		}
+		fprintf(stdout, "%d %d\n", NetArray[i].targetX, NetArray[i].targetY);
+		fprintf(stdout, "end\n");
 	}
 }
