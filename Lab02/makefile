@@ -18,7 +18,7 @@ $(BINS): src/main.cpp $(OBJS)
 	$(CC) $(CFLAGS)  $^ -o $@
 
 do:
-	$(CHECKCC) $(CHECKFLAGS) ./main Benchmark/case1.in
+	$(CHECKCC) $(CHECKFLAGS) ./main Benchmark/sample.in output.txt
 
 clean:
 	rm -rf src/lib/*.o main
