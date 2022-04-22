@@ -11,6 +11,7 @@
 #define DISTANCE_EMPTY -1
 #define DISTANCE_OCCUPIED -2
 #define NO_PARENT {-1, -1}
+#define OUTPUT_STREAM output
 
 using namespace std;
 using std::queue;
@@ -35,6 +36,12 @@ void printDistance(vector<vector<int>> distance, Grid *grid){
 	printf("\n");
 }
 
+void swap_direction(int *a, int *b){
+	int temp;
+	temp=*a;
+	*a=*b;
+	*b=temp;
+}
 
 vector <Point> routeOneNet(Grid *grid, Net net, bool *isValidRouting){
 
@@ -102,6 +109,8 @@ vector <Point> routeOneNet(Grid *grid, Net net, bool *isValidRouting){
 				Parent[new_y][new_x].y = y;
 				q.push({new_x, new_y});
 				q.push({current_distance + 1, 0});
+				swap_direction(&dx[0], &dx[i]);
+				swap_direction(&dy[0], &dy[i]);
 				//printDistance(distance, grid);
 			}
 		}
@@ -140,15 +149,34 @@ void updateGridState(vector <Point> Path, Grid *grid, Net net){
 	}
 }
 
+void ripUpAllNet(Grid *grid, Net *NetArray){
+	//init all of the grid to 0
+	for(int i = 0; i < grid->row; i++){
+		for(int j = 0; j < grid->col; j++){
+			if(grid->gridState[i][j] == NET_OCCUPIED){
+				grid->gridState[i][j] = EMPTY_OCCUPIED;
+			}
+		}
+	}
+}
+
+void shuffleNetArray(Net *NetArray, int NumNet, int critical_NetNumber){
+	Net critical_Net = NetArray[critical_NetNumber];
+	for(int i =critical_NetNumber - 1; i >= 0; i --){
+		NetArray[i + 1] = NetArray[i];
+	}
+	NetArray[0] = critical_Net;
+}
+
 
 void outputFile(FILE *output, Net *NetArray, int NumNet, vector <vector <Point>> PathArray){
 	for(int i = 0; i < NumNet; i++){
-		fprintf(stdout, "%s %d\n", NetArray[i].NetName, NetArray[i].gridUsage);
-		fprintf(stdout, "begin\n");
+		fprintf(OUTPUT_STREAM, "%s %d\n", NetArray[i].NetName, NetArray[i].gridUsage);
+		fprintf(OUTPUT_STREAM, "begin\n");
 
 		vector <Point> currentPath = PathArray[i];
 		Point current_point = currentPath[0];
-		fprintf(stdout, "%d %d ", current_point.x, current_point.y);
+		fprintf(OUTPUT_STREAM, "%d %d ", current_point.x, current_point.y);
 
 		for(int j = 0; j < (int)currentPath.size() - 1; j++){
 			if((currentPath[j + 1].x == current_point.x) || (currentPath[j + 1].y == current_point.y)){
@@ -157,11 +185,11 @@ void outputFile(FILE *output, Net *NetArray, int NumNet, vector <vector <Point>>
 			else{
 				current_point = currentPath[j];
 				j--;
-				fprintf(stdout, "%d %d\n", current_point.x, current_point.y);
-				fprintf(stdout, "%d %d ", current_point.x, current_point.y);
+				fprintf(OUTPUT_STREAM, "%d %d\n", current_point.x, current_point.y);
+				fprintf(OUTPUT_STREAM, "%d %d ", current_point.x, current_point.y);
 			}
 		}
-		fprintf(stdout, "%d %d\n", NetArray[i].targetX, NetArray[i].targetY);
-		fprintf(stdout, "end\n");
+		fprintf(OUTPUT_STREAM, "%d %d\n", NetArray[i].targetX, NetArray[i].targetY);
+		fprintf(OUTPUT_STREAM, "end\n");
 	}
 }
