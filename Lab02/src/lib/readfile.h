@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #ifndef _READFILE_H_
 #define _READFILE_H_
 
@@ -18,7 +16,7 @@ typedef struct _Net{
 	int sourceY;
 	int targetX;
 	int targetY;
-	int gridUsage;
+	int gridUsage;		//the distance of the path for routing the source to target
 } Net;
 
 void readfile(FILE *input, int *ROW, int *COL, int *NumBlock, Block **BloclArray, int *NumNet, Net **NetArray);

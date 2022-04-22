@@ -9,15 +9,8 @@
 using namespace std;
 using std::vector;
 
-typedef struct point{
-	int x;
-	int y;
-} Point;
-
 vector <Point> routeOneNet(Grid *grid, Net net, bool *isValidRouting);
 void printPath(vector <Point> Path);
-void updateGridState(vector <Point> Path, Grid *grid, Net net);
-void ripUpAllNet(Grid *grid, Net *NetArray);
 void shuffleNetArray(Net *NetArray, int NumNet, int critical_NetNumber);
 void outputFile(FILE *output, Net *NetArray, int NumNet, vector <vector <Point>> PathArray);
 

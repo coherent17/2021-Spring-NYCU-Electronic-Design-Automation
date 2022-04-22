@@ -35,3 +35,6 @@ $ make clean
 
 *	case3:
 ![](https://i.imgur.com/QABHVXO.png)
+
+* 	sample.in:
+![](https://i.imgur.com/RQ1TcTi.png)

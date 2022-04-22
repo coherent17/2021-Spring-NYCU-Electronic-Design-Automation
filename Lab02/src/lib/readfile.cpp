@@ -46,6 +46,7 @@ int comparator(const void *p, const void *q){
 	return distance_n1 > distance_n2;
 }
 
+//sort the netarray in increasing order of the distance between source and target
 void sortNetArray(Net *NetArray, int NumNet){
 	qsort((void*)NetArray, NumNet, sizeof(NetArray[0]), comparator);
 }
