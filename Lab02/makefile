@@ -33,8 +33,5 @@ verifier:
 	./$(BINS) case3.in case3.out
 	./draw case3.in case3.out
 
-	./$(BINS) sample.in sample.out
-	./draw sample.in sample.out
-
 clean:
 	rm -rf src/lib/*.o main $(OUT)
