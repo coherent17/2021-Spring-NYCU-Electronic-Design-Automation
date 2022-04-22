@@ -24,3 +24,14 @@ Please type make clean to delete binary exe. and *.o *.svg file
 ```bash=
 $ make clean
 ```
+
+## Result:
+
+*	case1:
+![](https://i.imgur.com/Ps6MR6G.png)
+
+*	case2:
+![](https://i.imgur.com/YTLBlXh.png)
+
+*	case3:
+![](https://i.imgur.com/QABHVXO.png)
