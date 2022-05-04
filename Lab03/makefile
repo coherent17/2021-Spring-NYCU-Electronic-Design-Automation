@@ -1,4 +1,4 @@
-CC = gcc
+CC = g++
 CFLAGS = -g -Wall
 CUDD = cudd-3.0.0
 INCLUDE = -I $(CUDD)/cudd -I $(CUDD)/util -I $(CUDD)
@@ -14,11 +14,15 @@ SRCS := $(wildcard $(SRC_DIRS:=/*.cpp))
 OBJS := $(SRCS:.cpp=.o)
 
 all: $(BINS)
-%.o: %.c %.h
-	$(CC) $(CFLAGS) $(INCLUDE) -c  $< -o $@ $(LINKER) 
 
-$(BINS): src/main.c $(OBJS)
-	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $@ $(LINKER) 
+%.o: %.cpp %.h
+	$(CC) $(CFLAGS) $(INCLUDE) -c  $< -o $@ #$(LINKER) 
+
+$(BINS): src/main.cpp $(OBJS)
+	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $@ $(LINKER)
+
+do:
+	./$(BINS) case1.txt mycase1.out
 
 clean:
 	rm -rf src/lib/*.o $(BINS)
