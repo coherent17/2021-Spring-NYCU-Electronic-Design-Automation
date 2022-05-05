@@ -30,4 +30,4 @@ seeall:
 	cat mycase3.out
 
 clean:
-	rm -rf *.o $(BINS) *.out
+	rm -rf *.o $(BINS) *.out *.dot *.png
