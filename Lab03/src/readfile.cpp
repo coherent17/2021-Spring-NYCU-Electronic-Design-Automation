@@ -18,7 +18,7 @@ void readFile(char *filename, RawData *rawdata){
 	//read the expression of the function
 	FILE *input = fopen(filename, "r");
 	fscanf(input, "%s", buffer);
-	printf("Expression: %s\n", buffer);
+	//printf("Expression: %s\n", buffer);
 	vector <vector<Variable>> temp_Literals;
 	char *token = strtok(buffer, "+");
 	while(token!=NULL){
