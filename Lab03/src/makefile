@@ -19,6 +19,22 @@ all: $(BINS)
 $(BINS): main.cpp $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $@ $(LINKER)
 
+do1:
+	./$(BINS) ../case1.txt mycase1.out
+	dot -Tsvg 1_order.dot -o 1_order.svg
+	dot -Tsvg 2_order.dot -o 2_order.svg
+
+do2:
+	./$(BINS) ../case2.txt mycase2.out
+	dot -Tsvg 1_order.dot -o 1_order.svg
+	dot -Tsvg 2_order.dot -o 2_order.svg
+
+do3:
+	./$(BINS) ../case3.txt mycase3.out
+	dot -Tsvg 1_order.dot -o 1_order.svg
+	dot -Tsvg 2_order.dot -o 2_order.svg
+	dot -Tsvg 3_order.dot -o 3_order.svg
+
 runall:
 	./$(BINS) ../case1.txt mycase1.out
 	./$(BINS) ../case2.txt mycase2.out
@@ -30,4 +46,4 @@ seeall:
 	cat mycase3.out
 
 clean:
-	rm -rf *.o $(BINS) *.out *.dot *.png
+	rm -rf *.o $(BINS) *.out *.dot *.svg
