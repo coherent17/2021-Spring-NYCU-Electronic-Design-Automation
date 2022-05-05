@@ -31,6 +31,25 @@ Please type make seeall to see the output of the 3 public cases:
 $	make seeall
 ```
 
+Please type make dox to run the public case indivisually and generate the svg file for BBD visualization.
+Type display [filename].svg to see the graph or open with chrome is fine either.
+
+To run the case1:
+```bash=
+$	make do1
+```
+
+To run the case2:
+```bash=
+$	make do2
+```
+
+To run the case3:
+```bash=
+$	make do3
+```
+
+
 ## Visualize Graphviz
 Please type the following command to visualize the BBD
 ```bash=
