@@ -56,3 +56,21 @@ ab+cd+ef+gh+ij+Aa+Bb+Cc+Dd+Ee+Ff.
 abcdefghij.
 acegibdfhj.
 ```
+*	in abcdefghij reduce order (Cudd_DagSize = 12):
+![](https://i.imgur.com/9veNXyE.png)
+*	in acegibdfhj reduce order (Cudd_DagSize = 64):
+![](https://i.imgur.com/lXS5Qex.png)
+
+### case3.txt
+```bash=
+a+b+c+d+e+f+g+h+i.
+abcdefghi.
+ihgfedcba.
+acegibdfh.
+```
+*	in abcdefghi reduce order (Cudd_DagSize = 11):
+![](https://i.imgur.com/MvfSUsn.png)
+*	in ihgfedcba reduce order (Cudd_DagSize = 11):
+![](https://i.imgur.com/rZ5d9We.png)
+*	in acegibdfh reduce order (Cudd_DagSize = 11):
+![](https://i.imgur.com/5IjsXzD.png)
