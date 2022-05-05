@@ -6,7 +6,6 @@ LINKER = $(CUDD)/cudd/.libs/libcudd.a -lm
 BINS = Lab3
 OBJS = readfile.o buildBDD.o
 
-
 CHECKCC = valgrind
 CHECKFLAGS = --leak-check=full -s --show-leak-kinds=all --track-origins=yes
 
@@ -20,14 +19,15 @@ all: $(BINS)
 $(BINS): main.cpp $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $@ $(LINKER)
 
-do1:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BINS) ../case1.txt ../mycase1.out
+runall:
+	./$(BINS) ../case1.txt mycase1.out
+	./$(BINS) ../case2.txt mycase2.out
+	./$(BINS) ../case3.txt mycase3.out
 
-do2:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BINS) ../case2.txt ../mycase2.out
-
-do3:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BINS) ../case3.txt ../mycase3.out
+seeall:
+	cat mycase1.out
+	cat mycase2.out
+	cat mycase3.out
 
 clean:
-	rm -rf *.o $(BINS)
+	rm -rf *.o $(BINS) *.out
