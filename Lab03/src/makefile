@@ -19,6 +19,13 @@ all: $(BINS)
 $(BINS): main.cpp $(OBJS)
 	$(CC) $(CFLAGS) $(INCLUDE) $^ -o $@ $(LINKER)
 
+installCUDD:
+	tar -xvf cudd-3.0.0.tar.gz
+	cd cudd-3.0.0
+	./configure
+	make
+	make check
+
 runall:
 	./$(BINS) ../case1.txt mycase1.out
 	./$(BINS) ../case2.txt mycase2.out
