@@ -6,6 +6,6 @@
 #include "config.h"
 #include "readfile.h"
 
-void buildBDD(RawData rawdata);
+void buildBDD(RawData rawdata, int whichOrder);
 
 #endif

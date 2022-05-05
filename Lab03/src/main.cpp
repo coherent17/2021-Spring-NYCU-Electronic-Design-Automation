@@ -7,6 +7,8 @@
 #include "readfile.h"
 #include "buildBDD.h"
 
+#define INT_MAX 2147483647
+
 //extern global variable
 DdManager *gbm;
 DdNode *bdd;
@@ -22,18 +24,29 @@ void write_dd(DdManager *gbm, DdNode *dd){
 
 int main(int argc, char *argv[]){
 	char *inputName = *(argv + 1);
-	//char *outputName = *(argv + 2);
+	char *outputName = *(argv + 2);
 
 	RawData rawdata;
 	
 	//read file
 	readFile(inputName, &rawdata);
-	printRawData(rawdata);
+	//printRawData(rawdata);
 
-	//build bbd
-	void buildBDD(RawData rawdata);
-	bdd = Cudd_BddToAdd(gbm, bdd);
-	write_dd(gbm, bdd);
-	Cudd_Quit(gbm);
+	int minNode = INT_MAX;
+
+	//build bbd in different reduce order
+	for(int i = 0; i < (int)rawdata.VarOrder.size(); i++){
+		buildBDD(rawdata, i);
+		bdd = Cudd_BddToAdd(gbm, bdd);
+		write_dd(gbm, bdd);
+		int temp = Cudd_DagSize(bdd);
+		minNode = (minNode > temp) ? temp : minNode;
+		Cudd_Quit(gbm);		
+	}
+
+	//output the answer:
+	FILE *output = fopen(outputName, "w");
+	fprintf(output,"%d\n", minNode);
+	fclose(output);
 	return 0;
 }

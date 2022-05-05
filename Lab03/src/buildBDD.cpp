@@ -10,16 +10,24 @@
 extern DdManager *gbm;
 extern DdNode *bdd;
 
-void buildBDD(RawData rawdata){
-	gbm = Cudd_Init(26, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);
+void buildBDD(RawData rawdata, int whichOrder){
+	gbm = Cudd_Init(0, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);
 	DdNode *temp;
 	bdd = Cudd_ReadLogicZero(gbm);
 	Cudd_Ref(bdd);
-	for(int i = 0; i < (int)rawdata.Literals.size(); i++){
+
+	for(const auto Literal : rawdata.Literals){
 		DdNode *term = Cudd_ReadOne(gbm);
 		Cudd_Ref(term);
-		for(int j = 0; j < (int)rawdata.Literals[i].size(); j++){
-			DdNode *Node = rawdata.Literals[i][j].isNegative ? Cudd_bddIthVar(gbm, rawdata.Literals[i][j].ASCII_id) : Cudd_Not(Cudd_bddIthVar(gbm, rawdata.Literals[i][j].ASCII_id));
+
+		for(const auto Variable : Literal){
+			DdNode *Node;
+			if(!Variable.isNegative){
+				Node = Cudd_bddIthVar(gbm, rawdata.VarIndex[whichOrder][Variable.ASCII_id]);
+			}
+			else if(Variable.isNegative){
+				Node = Cudd_Not(Cudd_bddIthVar(gbm, rawdata.VarIndex[whichOrder][Variable.ASCII_id]));
+			}
 			temp = Cudd_bddAnd(gbm, Node, term);
 			Cudd_Ref(temp);
 			Cudd_RecursiveDeref(gbm, term);
