@@ -25,6 +25,7 @@ installCUDD:
 	./configure
 	make
 	make check
+	cd ..
 
 runall:
 	./$(BINS) ../case1.txt mycase1.out
