@@ -4,7 +4,7 @@
 
 ## Compile:
 
-Please type make installCUDD to install CUDD package:
+Please type following command to install CUDD package if you haven't installed CUDD:
 ```shellscript=
 $	chmod +x CUDD_install.sh
 $	./CUDD_install.sh
