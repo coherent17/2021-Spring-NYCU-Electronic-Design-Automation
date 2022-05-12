@@ -12,7 +12,7 @@ extern DdNode *bdd;
 
 void buildBDD(RawData rawdata, int whichOrder){
 	gbm = Cudd_Init(0, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0);
-	DdNode *temp;
+	DdNode *tempNode;
 	bdd = Cudd_ReadLogicZero(gbm);
 	Cudd_Ref(bdd);
 
@@ -28,14 +28,14 @@ void buildBDD(RawData rawdata, int whichOrder){
 			else if(Variable.isNegative){
 				Node = Cudd_Not(Cudd_bddIthVar(gbm, rawdata.VarIndex[whichOrder][Variable.ASCII_id]));
 			}
-			temp = Cudd_bddAnd(gbm, Node, term);
-			Cudd_Ref(temp);
+			tempNode = Cudd_bddAnd(gbm, Node, term);
+			Cudd_Ref(tempNode);
 			Cudd_RecursiveDeref(gbm, term);
-			term = temp;
+			term = tempNode;
 		}
-		temp = Cudd_bddOr(gbm, term, bdd);
-		Cudd_Ref(temp);
+		tempNode = Cudd_bddOr(gbm, term, bdd);
+		Cudd_Ref(tempNode);
 		Cudd_RecursiveDeref(gbm, bdd);
-		bdd = temp;
+		bdd = tempNode;
 	}
 }
