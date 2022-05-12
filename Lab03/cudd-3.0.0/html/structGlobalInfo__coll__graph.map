@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structNodeDist.html" title="structure created to store subset results for each node and distances with odd and even parity of the..." alt="" coords="5,111,83,137"/>
+<area shape="rect" id="node3" href="$structDdNode.html" title="Decision diagram node." alt="" coords="133,5,203,32"/>
+<area shape="rect" id="node4" href="$structDdChildren.html" title="The two children of a non&#45;terminal node." alt="" coords="107,111,193,137"/>
+</map>

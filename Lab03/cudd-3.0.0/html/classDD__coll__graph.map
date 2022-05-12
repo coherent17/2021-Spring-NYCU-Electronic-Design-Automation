@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classCapsule.html" title="Class for reference counting of CUDD managers." alt="" coords="495,485,565,512"/>
+<area shape="rect" id="node3" href="$structDdManager.html" title="Specialized DD symbol table." alt="" coords="450,395,539,421"/>
+<area shape="rect" id="node4" href="$structDdLocalCache.html" title="Local cache." alt="" coords="626,485,733,512"/>
+<area shape="rect" id="node5" href="$structDdLocalCacheItem.html" title="Generic local cache item." alt="" coords="683,328,817,355"/>
+<area shape="rect" id="node6" href="$structDdNode.html" title="Decision diagram node." alt="" coords="207,5,277,32"/>
+<area shape="rect" id="node7" href="$structDdChildren.html" title="The two children of a non&#45;terminal node." alt="" coords="107,193,193,220"/>
+<area shape="rect" id="node8" href="$structDdSubtable.html" title="Subtable for one index." alt="" coords="340,193,431,220"/>
+<area shape="rect" id="node10" href="$structDdCache.html" title="Computed table." alt="" coords="5,193,83,220"/>
+<area shape="rect" id="node9" href="$structMtrNode__.html" title="multi&#45;way tree node." alt="" coords="455,193,533,220"/>
+<area shape="rect" id="node11" href="$structDdHook.html" title="CUDD hook." alt="" coords="629,193,699,220"/>
+</map>

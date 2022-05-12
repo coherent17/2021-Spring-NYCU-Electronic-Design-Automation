@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structNtrHeap.html" title="Heap&#45;based priority queue." alt="" coords="17,96,87,123"/>
+<area shape="rect" id="node3" href="$structNtrHeapSlot.html" title="Entry of NtrHeap." alt="" coords="5,5,99,32"/>
+<area shape="rect" id="node4" href="$structDdNode.html" title="Decision diagram node." alt="" coords="166,96,236,123"/>
+<area shape="rect" id="node5" href="$structDdChildren.html" title="The two children of a non&#45;terminal node." alt="" coords="178,304,264,331"/>
+</map>

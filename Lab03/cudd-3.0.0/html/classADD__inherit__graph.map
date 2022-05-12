@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classABDD.html" title="Class for ADDs and BDDs." alt="" coords="5,80,64,107"/>
+<area shape="rect" id="node3" href="$classDD.html" title="Base class for all decision diagrams in CUDD." alt="" coords="13,5,56,32"/>
+</map>

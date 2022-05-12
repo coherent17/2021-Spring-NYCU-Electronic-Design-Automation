@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structDdNode.html" title="Decision diagram node." alt="" coords="178,5,248,32"/>
+<area shape="rect" id="node3" href="$structDdChildren.html" title="The two children of a non&#45;terminal node." alt="" coords="210,111,296,137"/>
+</map>
