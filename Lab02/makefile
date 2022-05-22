@@ -33,6 +33,12 @@ verifier:
 	./$(BINS) case3.in case3.out
 	./draw case3.in case3.out
 
+	./$(BINS) case4.in case4.out
+	./draw case4.in case4.out
+
+	./$(BINS) case5.in case5.out
+	./draw case5.in case5.out
+
 	./$(BINS) sample.in sample.out
 	./draw sample.in sample.out
 
