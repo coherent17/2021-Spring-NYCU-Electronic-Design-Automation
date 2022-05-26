@@ -66,5 +66,21 @@ lexbench.cpp: lexbench.l Makefile
 	$(LEX) -Pkk lexbench.l
 	mv lex.kk.c $@
 
+do1:
+	./KF_ATPG -atpg NR -cir example/c17.bench -path_not example/c17.path_not -output c17_NR.pttn
+	./KF_ATPG -atpg R -cir example/c17.bench -path_not example/c17.path_not -output c17_R.pttn
+	diff c17_NR.pttn ../case1_ans/c17_NR.pttn > c17_NR_diff.txt
+	diff c17_R.pttn ../case1_ans/c17_R.pttn > c17_R_diff.txt
+	cat c17_NR_diff.txt
+	cat c17_R_diff.txt
+
+do2:
+	./KF_ATPG -atpg NR -cir example/s27.bench -path_not example/s27.path_not -output s27_NR.pttn
+	./KF_ATPG -atpg R -cir example/s27.bench -path_not example/s27.path_not -output s27_R.pttn	
+	diff s27_NR.pttn ../case2_ans/s27_NR.pttn > s27_NR_diff.txt
+	diff s27_R.pttn ../case2_ans/s27_R.pttn > s27_R_diff.txt
+	cat s27_NR_diff.txt
+	cat s27_R_diff.txt
+
 clean:
-	rm *.o readbench.cpp lexbench.cpp readbench.tab.h $(TARGET)
+	rm *.o readbench.cpp lexbench.cpp readbench.tab.h $(TARGET) *.pttn *.txt
