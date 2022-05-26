@@ -1,0 +1,10 @@
+@ R G0 net58 net31 G11
+@ R G0 net58 net31 net30 G17 
+@ R G1 n103 net32 G11
+@ R G3 net32 G10 
+@ R G3 net32 G11 
+@ R G5 n102 net32 G10 
+@ R G5 n102 net31 G11 
+@ R G6 net31 net30 G17 
+@ R G7 n104 net32 G11
+@ R G7 net25 G13 

@@ -1,0 +1,68 @@
+************
+Release 2.0 
+Apr. 10, 2006
+************
+This package implements the circuit-SAT based path-delay-fault test pattern generation tool (KF-ATPG)
+described in paper
+"TranGen: A SAT-Based ATPG for Path-Oriented Transition Fault",
+Kai Yang, Li-C. Wang, and Kwang-Ting Cheng,
+Proc. ACM/IEEE ASP Design Automation Conference, 2004.
+
+************
+[NOTE]: When results are published using our tool, please refer to the papers below:
+		"TranGen: A SAT-Based ATPG for Path-Oriented Transition Fault",
+		Kai Yang, Li-C. Wang, and Kwang-Ting Cheng,
+		Proc. ACM/IEEE ASP Design Automation Conference, 2004.
+************
+
+Thank you very much. 
+
+----------------------------------------------------------
+
+This distribution includes a circuit-SAT based path-delay-fault ATPG - KF-ATPG
+
+After DECOMPRESS and UNTAR the package, you will see a directory called "KF_ATPG".
+Our ATPG and the circuit-SAT solver is in this directory. Moreover, inside the
+directory, you will find an "example" directory containing some of the circuit examples.
+
+set tabstop = 4 of your editor when read the source files
+
+Our ATPG takes the ".bench" format as input.
+If you are not familiar with this format, you can take a
+look at "c17.bench" to get some idea.
+
+*******************************
+Please direct your questions to
+*******************************
+
+Kai Yang, UCSB, 805-893-5678
+http:://cadlab.ece.ucsb.edu/~kyang
+
+kyang@ece.ucsb.edu
+
+***************************************
+Also please CC your e-mail questions to
+***************************************
+
+timcheng@ece.ucsb.edu (Tim Cheng)
+
+-------------------------------------------------------------------
+
+To install the KF-ATPG package:
+   
+   unzip KF_ATPG.zip
+   type "make" in the "KF-ATPG" directory to compile KF-ATPG
+
+   The ATPG was developed under the Redhat Linux
+   system using GNU "g++" 
+
+   It has not been tested under any other OS such
+   as Solaris. Users are welcome to test this software
+   under other systems. 
+
+-------------------------------------------------------------------
+
+Have Fun!
+
+ Kai Yang Apr. 10, 2006
+ Santa Barbara, CA
