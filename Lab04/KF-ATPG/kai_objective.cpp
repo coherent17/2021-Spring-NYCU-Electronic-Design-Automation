@@ -60,24 +60,177 @@ void AtpgObj::BuildFromPath_NR(PATH *pptr)
 	cleanup();
 	KaiGATE *CurG, *PreG;
 	TRANSITION CurT, PreT;
-	assert(pptr->NoGate()==pptr->NoTrans());
+	assert(pptr->NoGate() == pptr->NoTrans());
 
-	PreG=/* input gate on sensitive path*/
-	PreT=/* input transition on sensitive path*/
-	
+	//get the first gate and fist transition
+	PreG = pptr->GetGate(0);	/* input gate on sensitive path*/
+	PreT = pptr->GetTrans(0);	/* input transition on sensitive path*/
+
+	//define the transition state (R : rising & F : falling)
+
+
 	// Fault Activation at 1st TimeFrame
-	if(PreT==R) AddObj(ToCUTName(PreG, 0), /*value*/);
-	else if(PreT==F) AddObj(ToCUTName(PreG, 0), /*value*/);
+	if(PreT==R) AddObj(ToCUTName(PreG, 0), 0);
+	else if(PreT==F) AddObj(ToCUTName(PreG, 0), 1);
 	else { cerr<<"R/F Error !"<<endl; exit(-1); }
 
 	// Fault Activation at 2nd TimeFrame 
-	if(PreT==R) AddObj(ToCUTName(PreG, 1), /*value*/);
-	else if(PreT==F) AddObj(ToCUTName(PreG, 1), /*value*/);
+	if(PreT==R) AddObj(ToCUTName(PreG, 1), 1);
+	else if(PreT==F) AddObj(ToCUTName(PreG, 1), 0);
 	else { cerr<<"R/F Error !"<<endl; exit(-1); }
-	
-   /*Fault Propagation = off-input setting on sensitive path */
 
-	
+	/*Fault Propagation = off-input setting on sensitive path */
+	for(int i = 1; i < pptr->NoGate(); i++){
+		CurG = pptr->GetGate(i);
+		CurT = pptr->GetTrans(i);
+
+		//enum GATEFUNC { G_PI=0, G_PO, G_NOT, G_AND, G_NAND, G_OR, G_NOR, G_DFF, G_BUF, G_XOR, G_BAD, G_CNF };
+		//                  0       1     2      3      4       5     6      7      8      9      10	 11
+
+		//five options for the gate: G_PI, G_AND, G_NAND, G_OR, G_NOR
+
+		switch(CurG->GetFunction()){
+
+			//Primary Input Gate:
+			case G_PI:
+				//1st TimeFrame
+				if (CurT == R) AddObj(ToCUTName(CurG, 0), 0);
+      			else if (CurT == F) AddObj(ToCUTName(CurG, 0), 1);
+      			else { cerr<<"R/F Error !"<<endl; exit(-1); }
+
+      			//2nd TimeFrame
+      			if(CurT==R) AddObj(ToCUTName(CurG, 1), 1);
+				else if(CurT==F) AddObj(ToCUTName(CurG, 1), 0);
+				else { cerr<<"R/F Error !"<<endl; exit(-1); }
+				break;
+
+			//And Gate: cv = 0, ncv = 1, rising: x->1, falling: x->1
+			case G_AND:
+
+				//rising: x->1
+				if (PreT == R){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 1);
+						}
+					}
+				}
+
+				//falling: x->1
+				else if (PreT == F){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 1);
+						}
+					}					
+				}
+
+				else { cerr<<"R/F Error !"<<endl; exit(-1); }
+				break;
+
+
+			//Nand Gate: cv = 0, ncv = 1, rising: x->1, falling: x->1
+			case G_NAND:
+
+				//rising: x->1
+				if (PreT == R){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 1);
+						}
+					}
+				}
+
+				//falling: x->1
+				else if (PreT == F){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 1);
+						}
+					}					
+				}
+
+				else { cerr<<"R/F Error !"<<endl; exit(-1); }
+				break;
+
+			//Or Gate: cv = 1, ncv = 0, rising: x->0, falling: x->0
+			case G_OR:
+
+				//rising: x->0
+				if (PreT == R){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 0);
+						}
+					}
+				}
+
+				//falling: x->0
+				else if (PreT == F){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 0);
+						}
+					}					
+				}
+
+				else { cerr<<"R/F Error !"<<endl; exit(-1); }
+				break;
+
+			//Nor Gate: cv = 1, ncv = 0, rising: x->0, falling: x->0
+			case G_NOR:
+
+				//rising: x->0
+				if (PreT == R){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 0);
+						}
+					}
+				}
+
+				//falling: x->0
+				else if (PreT == F){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 0);
+						}
+					}					
+				}
+
+				else { cerr<<"R/F Error !"<<endl; exit(-1); }
+				break;
+
+			default:
+				break;
+		}
+		PreG = CurG;
+		PreT = CurT;
+	}
 }
 
 void AtpgObj::BuildFromPath_R(PATH *pptr)
@@ -88,7 +241,170 @@ void AtpgObj::BuildFromPath_R(PATH *pptr)
 	assert(pptr->NoGate()==pptr->NoTrans());
     
 	/*Do Fault Activation & Fault Propagation under Robust test setting*/
+	
+	//get the first gate and fist transition
+	PreG = pptr->GetGate(0);
+	PreT = pptr->GetTrans(0);
 
+	// Fault Activation at 1st TimeFrame
+	if(PreT==R) AddObj(ToCUTName(PreG, 0), 0);
+	else if(PreT==F) AddObj(ToCUTName(PreG, 0), 1);
+	else { cerr<<"R/F Error !"<<endl; exit(-1); }
+
+	// Fault Activation at 2nd TimeFrame 
+	if(PreT==R) AddObj(ToCUTName(PreG, 1), 1);
+	else if(PreT==F) AddObj(ToCUTName(PreG, 1), 0);
+	else { cerr<<"R/F Error !"<<endl; exit(-1); }
+
+	for(int i = 1; i < pptr->NoGate(); i++){
+		CurG = pptr->GetGate(i);
+    	CurT = pptr->GetTrans(i);
+    	switch(CurG->GetFunction()){
+
+			//Primary Input Gate:
+			case G_PI:
+				//1st TimeFrame
+				if (CurT == R) AddObj(ToCUTName(CurG, 0), 0);
+      			else if (CurT == F) AddObj(ToCUTName(CurG, 0), 1);
+      			else { cerr<<"R/F Error !"<<endl; exit(-1); }
+
+      			//2nd TimeFrame
+      			if(CurT==R) AddObj(ToCUTName(CurG, 1), 1);
+				else if(CurT==F) AddObj(ToCUTName(CurG, 1), 0);
+				else { cerr<<"R/F Error !"<<endl; exit(-1); }
+				break;
+
+			//And Gate: cv = 0, ncv = 1, rising: x->1, falling: 1->1
+			case G_AND:
+
+				//rising: x->1
+				if (PreT == R){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 1);
+						}
+					}
+				}
+
+				//falling: x->1
+				else if (PreT == F){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 0), 1);
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 1);
+						}
+					}					
+				}
+
+				else { cerr<<"R/F Error !"<<endl; exit(-1); }
+				break;
+
+
+			//Nand Gate: cv = 0, ncv = 1, rising: x->1, falling: 1->1
+			case G_NAND:
+
+				//rising: x->1
+				if (PreT == R){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 1);
+						}
+					}
+				}
+
+				//falling: 1->1
+				else if (PreT == F){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 0), 1);
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 1);
+						}
+					}					
+				}
+
+				else { cerr<<"R/F Error !"<<endl; exit(-1); }
+				break;
+
+			//Or Gate: cv = 1, ncv = 0, rising: 0->0, falling: x->0
+			case G_OR:
+
+				//rising: 0->0
+				if (PreT == R){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 0), 0);
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 0);
+						}
+					}
+				}
+
+				//falling: x->0
+				else if (PreT == F){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 0);
+						}
+					}					
+				}
+
+				else { cerr<<"R/F Error !"<<endl; exit(-1); }
+				break;
+
+			//Nor Gate: cv = 1, ncv = 0, rising: 0->0, falling: x->0
+			case G_NOR:
+
+				//rising: x->0
+				if (PreT == R){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 0), 0);
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 0);
+						}
+					}
+				}
+
+				//falling: x->0
+				else if (PreT == F){
+					//setting all off-inputs to non-controlling value (ncv = 1)
+					for(int j = 0; j < CurG->NoFanin(); j++){
+
+						//just to make sure skip the on-input fanin (controlling value)
+						if(PreG != CurG->Fanin(j)){
+							AddObj(ToCUTName(CurG->Fanin(j), 1), 0);
+						}
+					}					
+				}
+
+				else { cerr<<"R/F Error !"<<endl; exit(-1); }
+				break;
+
+			default:
+				break;
+		}
+		PreG = CurG;
+		PreT = CurT;
+	}
 }
 
 
