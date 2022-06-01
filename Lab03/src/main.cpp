@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
 		bdd = Cudd_BddToAdd(gbm, bdd);
 		char filename[30];
 		sprintf(filename, "%d_order.dot", i+1);
-		write_dd(gbm, bdd, filename);
+		//write_dd(gbm, bdd, filename);
 		int temp = Cudd_DagSize(bdd);
 		minNode = (minNode > temp) ? temp : minNode;
 		Cudd_Quit(gbm);		
