@@ -18,3 +18,6 @@
 *	ATPG (Automatic Test Pattern Generation)
 *	Robust Pattern
 *	Non-Robust Pattern
+
+## Reference:
+(https://github.com/Luke2336/EDA_2021_Spring)
